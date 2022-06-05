@@ -2,11 +2,10 @@ var Connection = require("./config/dbconnection")
 var express = require('express');
 const { application } = require("express");
 const { connect } = require("./config/dbconnection");
-var router = express.Router();
-
+var router = express.Router(); -
 
 router.put("/update_student/:id", (req, res) => {
-    let studentID = req.params.id
+    // let studentID = req.params.id
     Connection.query('SELECT * FROM Student WHERE  studentID=?', req.params.id, (err, data) => {
         if (err) {
             console.log(err);
@@ -44,9 +43,8 @@ router.put("/update_student/:id", (req, res) => {
             }
         }
     })
-});
 
-
+})
 
 router.delete("/delete_student/:id", (req, res) => {
     let studentID = req.params.id
@@ -55,16 +53,14 @@ router.delete("/delete_student/:id", (req, res) => {
             console.log(err);
         } else {
             console.log(data);
-            // res.send(data)
             if (data.length > 0) {
                 Connection.query(`DELETE FROM Student WHERE studentID=?`, [req.params.id], (err, insert) => {
                         if (err) {
                             res.json({
-                                    code: 400,
-                                    msg: "somthing went wrong",
-                                    status: false
-                                })
-                                // retunn error
+                                code: 400,
+                                msg: "somthing went wrong",
+                                status: false
+                            })
                         } else {
                             res.json({
                                     code: 200,
@@ -125,6 +121,121 @@ router.get("/student_data", (req, res) => {
             })
 
         } else {
+            res.json({
+                code: 200,
+                msg: data
+            })
+        }
+    })
+})
+
+router.put("/update/:id", (req, res) => {
+    Connection.query('SELECT * FROM Student WHERE  studentID=?', req.params.id, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(data);
+            if (data.length > 0) {
+
+                Connection.query('UPDATE Student SET Password = ? WHERE studentID = ? ', [req.body.Password, req.params.id], (err, row) => {
+
+                    if (err) {
+                        res.json({
+                            code: 400,
+                            msg: "somthing went wrong "
+                        })
+                    } else {
+                        res.json({
+                            code: 200,
+                            msg: "update success "
+                        })
+                    }
+                })
+            } else {
+                res.json({
+                    code: 400,
+                    msg: "data not found"
+                })
+            }
+        }
+
+
+    })
+
+})
+
+
+
+router.delete("/delet_data/:id", (req, res) => {
+    Connection.query('SELECT* FROM Student WHERE StudentID=?', req.params.id, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(data);
+            if (data.length > 0) {
+                Connection.query('DELETE FROM Student WHERE studentID=?', [req.params.id], (err, insert) => {
+                    if (err) {
+                        res.json({
+                            code: 400,
+                            msg: "somthing wrong ",
+                            stutas: false
+                        })
+                    } else {
+                        res.json({
+                            code: 200,
+                            msg: "delete succes",
+                            stutas: true
+                        })
+                    }
+                })
+            } else {
+                res.json({
+                    code: 400,
+                    msg: "data not found",
+                    stutas: false
+                })
+            }
+        }
+    })
+
+})
+
+
+
+router.get("/Studentinfo/:id", (req, res) => {
+    Connection.query('SELECT* FROM Student WHERE studentID=?', req.params.id, (err, data) => {
+        if (err) {
+            res.json({
+                code: 400,
+                msg: err
+            })
+        } else {
+            if (data.length > 0) {
+                res.json({
+                    code: 400,
+                    msg: data
+                })
+            } else {
+                res.json({
+                    code: 400,
+                    msg: "data not found"
+                })
+            }
+        }
+    })
+})
+
+
+router.get("/dataget", (req, res) => {
+    Connection.query('SELECT* FROM Student', (err, data) => {
+        if (err) {
+            console.log(err);
+            res.json({
+                code: 400,
+                msg: "data not faund"
+            })
+        } else {
+            console.log(data);
             res.json({
                 code: 200,
                 msg: data

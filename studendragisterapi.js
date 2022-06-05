@@ -56,18 +56,13 @@ router.post("/login_student", (req, res) => {
                 })
                 console.log(err);
             } else {
-                // res.json({
-                //     code: 200,z
-                //     msg: data
-                // })
                 console.log(data);
                 if (data.length < 0) {
                     res.json({
-                            code: 400,
-                            msg: "Email not exist,please ragister",
-                            status: false
-                        })
-                        // Already exist 
+                        code: 400,
+                        msg: "Email not exist,please ragister",
+                        status: false
+                    })
                 } else {
                     if (data[0].Password == Password) {
                         res.json({
@@ -77,7 +72,7 @@ router.post("/login_student", (req, res) => {
                     } else {
                         res.json({
                             code: 400,
-                            msg: "password not found"
+                            msg: "password not match"
                         })
                     }
                 }
